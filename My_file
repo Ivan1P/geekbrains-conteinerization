@@ -1,0 +1,35 @@
+################################# cat Dockerfile
+
+FROM python:3.8
+RUN pip install click==7.1.2
+RUN pip install Flask==1.1.2
+RUN pip install itsdangerous==1.1.0
+RUN pip install Jinja2==2.11.2
+RUN pip install MarkupSafe==2.0.1
+RUN pip install Werkzeug==1.0.1
+ADD . /app
+EXPOSE 9010
+ENTRYPOINT python /app/app1.py  runserver 0.0.0.0:9010
+
+
+
+################################# cat app1.py
+#!/usr/bin/env python
+
+import os
+
+from flask import Flask
+
+config = {
+        "port": os.environ.get('PORT', 9010),
+        "debug": os.environ.get('DEBUG', False)
+}
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello, World!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=config["port"], debug=config["debug"])
